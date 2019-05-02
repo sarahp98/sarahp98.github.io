@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Leaflet Routing!</title>
+
+    <!--Style-->
+    <link rel="stylesheet" href="css.css" />
+    <!--Leaflet-->
+      <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css" integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA==" crossorigin=""/>
+      <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js" integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg==" crossorigin=""></script>
+    <!--Leaflet Routing Machine-->
+      <link rel="stylesheet" href="leaflet-routing-machine.css" />
+      <script src="leaflet-routing-machine.js"></script>
+    <!--Leaflet Control Geocoder-->
+      <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+      <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+    <!--Easy Button-->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.css">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.js"></script>
+  
+</head>
+
+<body>
+  <div id="map" class="map"></div> <!--Where the map goes-->
+
+  <script>
+    //The map variable
+    var map = L.map('map').setView([47.25, -122.44], 11);
+
+    //Basemap being added to map, using my access token
+    L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1Ijoic2FyYWhwOTgiLCJhIjoiY2p0ZzdoaXE2MDB1ZjQzcGZpMWY0eThpMCJ9.mjYzBhlOz8aG8-14z99Uyg',{attribution: 'Map data & copy;<a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">Mapbox</a>', maxZoom: 18, id: 'mapbox.streets', accessToken: 'pk.eyJ1IjoicmNzYXVuZGVyczk2IiwiYSI6ImNqbzNleWJmcDBtanAzd3BncXI5amsxN2gifQ.xXowywf-2CY5HNdRkuHM7w'}).addTo(map);
+
+    //Initialize Leaflet Routing Machine plugin
+    var control = L.Routing.control({
+      waypoints: [
+                  null
+      ],
+      routeWhileDragging: true, //points can be dragged
+      units: 'imperial', //miles
+      router: L.Routing.mapbox('pk.eyJ1Ijoic2FyYWhwOTgiLCJhIjoiY2p0ZzdoaXE2MDB1ZjQzcGZpMWY0eThpMCJ9.mjYzBhlOz8aG8-14z99Uyg'), //Using Mapbox for routing data instead of OSM
+      geocoder: L.Control.Geocoder.nominatim(), //Using open source Nominatim for geocoding
+    }).addTo(map);
+
+    //Making the button container
+    function createButton(label, container) {
+       var btn = L.DomUtil.create('button', '', container);
+       btn.setAttribute('type', 'button');
+       btn.innerHTML = label;
+       return btn;
+     }
+
+     //The buttons that make the start and end points
+     //Putting the lat long from the points into the Routing Machine
+     map.on('click', function(e) {
+       var container = L.DomUtil.create('div'),
+       startBtn = createButton('Start here', container),
+       destBtn = createButton('Go here', container);
+       L.popup() //Popup that says start here or go here
+         .setContent(container)
+         .setLatLng(e.latlng)
+         .openOn(map);
+         L.DomEvent.on(startBtn, 'click', function() {
+                 control.spliceWaypoints(0,1,e.latlng);
+                 map.closePopup();
+             });
+         L.DomEvent.on(destBtn, 'click', function() {
+                 control.spliceWaypoints(control.getWaypoints().length-1, 1, e.latlng);
+                 map.closePopup();
+             });
+     });
+</script>
+
+<script>
+
+window.onload = function(){
+alert('Your location will be detected to aid your naviagtion.');
+};
+//locate button runs the location method and then adds to map
+L.easyButton('fas fa-map-marker-alt', function(){
+  map.locate({setView: true});
+}).addTo(map);
+
+function onLocationFound(e) {
+
+
+  L.marker(e.latlng).addTo(map)
+    .bindPopup("You are here.").openPopup();
+
+}
+
+function onLocationError(e) {
+  alert(e.message);
+}
+
+map.on('locationfound', onLocationFound);
+map.on('locationerror', onLocationError);
+
+//This specifies that the locate method should run
+map.locate({
+  setView: true, //this option centers the map on location and zooms
+  maxZoom: 12, // this option prevents the map from zooming further than 16, maintaining some spatial context even if the accuracy of the location reading allows for closer zoom
+  timeout: 15000, // this option specifies when the browser will stop attempting to get a fix on the device's location. Units are miliseconds. Change this to 15000 and test the change. Before you submit, change this to 15000.
+  watch: false, // you can set this option from false to true to track a user's movement over time instead of just once. For our purposes, however, leave this option as is.
+});
+</script>
+</body>
+</html>

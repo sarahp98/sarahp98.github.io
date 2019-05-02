@@ -1,0 +1,377 @@
+<!DOCTYPE HTML>
+<!--
+	Verti by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+<head>
+	<title>Accessibility in Dublin, Ireland</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<link rel="stylesheet" href="assets/css/main.css" />
+
+	<!-- the leaflet CSS and JS library-->
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css"
+	integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+	crossorigin=""/>
+
+	<!-- Make sure you put this AFTER Leaflet's CSS -->
+	<script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js"
+	integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA=="
+	crossorigin=""></script>
+
+	<!-- Add JQuery to get local GeoJson file -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+	<!-- Leaflet heat from https://github.com/Leaflet/Leaflet.heat-->
+	<script src="dublin/leaflet-heat.js"></script>
+
+	<!-- A style for the map element -->
+	<style>
+	#map1 {height: 75vh; background-color: grey;}
+	#map2 {height: 75vh; background-color: grey;}
+
+</style>
+
+</head>
+<body class="is-preload no-sidebar">
+	<div id="page-wrapper">
+
+		<!-- Header -->
+		<div id="header-wrapper">
+			<header id="header" class="container">
+
+
+				<!-- Logo -->
+				<div id="logo">
+					<h1><a href="index.html">Sarah Pyle</a></h1>
+					<!--<span>Portfolio</span> -->
+				</div>
+
+
+				<!-- Nav -->
+				<nav id="nav">
+					<ul>
+						<li><a href="index.html">Home</a></li>
+
+						<li><a href="resume.html">Resume</a></li>
+
+						<li class="current">
+							<a>Maps</a>
+							<ul>
+								<li><a href="JLS.html">Japanese Language School Project</a></li>
+								<li><a href="seattlecenters.html">Seattle Community Emergency Hubs</a></li>
+								<li><a href="earthquakes.html">Earthquakes</a></li>
+								<li><a href="dublin.html">Accessibility in Dublin, Ireland</a></li>
+							</ul>
+						</ul>
+					</nav>
+
+				</header>
+			</div>
+
+			<!-- Main -->
+			<div id="main-wrapper">
+				<div class="container">
+					<div id="content">
+
+						<!-- Content -->
+						<article>
+
+							<h2>Accessibility in Dublin, Ireland</h2>
+
+							<img src="images/dublin.jpg" alt="Dublin, Ireland" style="width:100%" align="center" />
+
+							<h1>Who Needs Access?</h1>
+
+							<p>A portion of city planning concerns considering the needs of its occupants. According to the <h ref="http://nda.ie/Disability-overview/Disability-Statistics/" target="_blank">Irish census </a> in 2011, 13% of the population has a disability. The best data geographic data avilable to approximate where people who may have a disability are in the city are two datasets: locations of senior centers and hospitals. I got this data from the <a href="https://data.smartdublin.ie/" target="_blank"> Smart Dublin free data portal.</a> These datasets are limited, and do not attempt to fully encapsulate who has a disability, or where they come from. I am using these datasets to estimate the most common locations that people who have a disability may be visiting, aside from other memebers of the population. Someone who has a disability needs to navigate Dublin, just like anyone else. Sometimes, a disability may limit one's access to certain methdos of transportation. So, how can these citizens travel the city?</p>
+
+
+							<!--Map 1-->
+							<!-- the map element -->
+							<div id="map1"></div>
+
+							<!-- the script for my map -->
+							<script>
+
+											//basemap from https://leaflet-extras.github.io/leaflet-providers/preview/
+											var CartoDB_Voyager = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+												attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+											});
+											var map1 = new L.Map("map1", {
+												center: new L.LatLng(53.311948, -6.394887),
+												zoom: 12
+											});
+											map1.addLayer(CartoDB_Voyager);
+
+											//Thanks to https://www.igismap.com/add-load-geojson-file-point-polyline-polygon-map-leaflet-js/ for the tutorial
+											//data source https://data.smartdublin.ie/dataset/senior-citizens
+											$.getJSON("dublin/seniors2.geojson",function(data){
+
+											// add GeoJSON layer to the map once the file is loaded
+											//popup
+											var datalayer1 = L.geoJson(data ,{
+												onEachFeature: function(feature, featureLayer) {
+													featureLayer.bindPopup("<p><b>Senior Centers</b></p> <p> <b>Name:</b> "+feature.properties.Name+"</p> <p> <b>Address:</b> "+feature.properties.Address+"</p> <p> <b>Website:</b> "+feature.properties.Website+"</p>").openPopup();
+
+												}
+											})
+											//Thanks to https://leafletjs.com/examples/geojson/ for info on point to layer
+											//Marker style
+											var geojsonMarkerOptions = {
+												radius: 8,
+												fillColor: "#808080", //50% gray
+												color: "#000",
+												weight: 1,
+												opacity: 1,
+												fillOpacity: 0.8,
+											};
+												//Do the point to layer thing
+												L.geoJSON(data, {
+													pointToLayer: function (feature, latlng) {
+													//return L.circleMarker(latlng, geojsonMarkerOptions);
+													var mypopup = L.popup().setContent("latlng: " + latlng);
+													var mymarker = L.circleMarker(latlng, geojsonMarkerOptions);
+													//Attach the popup to the points (different from how you would traditionally do it). Thank you https://stackoverflow.com/questions/40475652/leaflet-add-popup-onto-a-layer-using-geojson
+													mymarker.bindPopup("<p><b>Senior Centers</b></p> <p> <b>Name:</b> "+feature.properties.Name+"</p> <p> <b>Address:</b> "+feature.properties.Address+"</p> <p> <b>Website:</b> "+feature.properties.Website+"</p>");
+													return mymarker;
+												}
+
+												//Add everything to the map
+											}).addTo(map1);
+
+											//Thanks to https://www.igismap.com/add-load-geojson-file-point-polyline-polygon-map-leaflet-js/ for the tutorial
+											//data source https://data.smartdublin.ie/dataset/health-and-wellbeing
+											$.getJSON("dublin/health.geojson",function(data){
+
+
+											//Thanks to https://leafletjs.com/examples/geojson/ for info on point to layer
+											//Marker Style
+											var geojsonMarkerOptions = {
+												radius: 8,
+												fillColor: "#00e6e6", //teal?
+												color: "#000",
+												weight: 1,
+												opacity: 1,
+												fillOpacity: 0.8,
+											};
+											//Do the point to layer thing
+											L.geoJSON(data, {
+												pointToLayer: function (feature, latlng) {
+													//return L.circleMarker(latlng, geojsonMarkerOptions);
+													var mypopup = L.popup().setContent("latlng: " + latlng);
+													var mymarker = L.circleMarker(latlng, geojsonMarkerOptions);
+													//Attach the popup to the points (different from how you would traditionally do it). Thank you https://stackoverflow.com/questions/40475652/leaflet-add-popup-onto-a-layer-using-geojson
+													mymarker.bindPopup("<p><b>Hospitals & Clinics</b></p> <p> <b>Name:</b> "+feature.properties.Name+"</p> <p> <b>Address:</b> "+feature.properties.Address+"</p> <p> <b>Purpose:</b> "+feature.properties.SummaryActivities+"</p> <p> <b>Website:</b> "+feature.properties.Website+"</p>");
+													return mymarker;
+												}
+
+
+											//Add everything to the map
+										}).addTo(map1);
+
+										});
+
+										//Make a legend, add it to the bottom right
+									      	var legend1 = L.control({position: 'topright'});
+
+									      	//when adding the legend to the map...
+									      	legend1.onAdd = function (map) {
+									        //create a div for it
+									        //Thank you Matt Seto for the code
+									          var div1 = L.DomUtil.create('div1', 'info legend1');
+									          //set an image to the div content
+									          div1.innerHTML = "<img src=map1legend.jpg style='width: 200px;'></img>";
+									          //return the div
+									          return div1;
+									      };
+									      //add the legend to the map
+									      legend1.addTo(map1);
+
+
+										})
+
+									</script>
+
+									<br>
+
+									<img src="images/picture2.jpg" alt="a young man in a wheelchair waits for the train" style="width:100%" />
+
+									<br>
+									<h1>Where Can They Go?</h1>
+									<p>Another two key datasets provided by the <a href="https://data.smartdublin.ie/" target="_blank"> Smart Dublin free data portal</a> include: locations of LUAS train stations and parking areas with accessible parking spots. These are two options for a person with a disability to use to get around Dublin. However, the accessible parking area requires that one has access to a private vehicle, which is a barrier for many people.  </p>
+
+									<!--Map 2-->
+									<!-- the map element -->
+									<div id="map2"></div>
+
+									<!-- the script for my map -->
+									<script>
+
+											//basemap from https://leaflet-extras.github.io/leaflet-providers/preview/
+											var CartoDB_Voyager = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+												attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+											});
+											var map2 = new L.Map("map2", {
+												center: new L.LatLng(53.311948, -6.394887),
+												zoom: 12
+											});
+											map2.addLayer(CartoDB_Voyager);
+
+											//Thanks to https://www.igismap.com/add-load-geojson-file-point-polyline-polygon-map-leaflet-js/ for the tutorial
+											//data source https://data.smartdublin.ie/dataset/luas-stops
+											$.getJSON("dublin/luas.geojson",function(data){
+
+											//Thanks to https://leafletjs.com/examples/geojson/ for info on point to layer
+											//Marker Style
+											var geojsonMarkerOptions = {
+												radius: 8,
+												fillColor: "#ff7800", //orange
+												color: "#000",
+												weight: 1,
+												opacity: 1,
+												fillOpacity: 0.8,
+											};
+											//Do the point to layer thing
+											L.geoJSON(data, {
+												pointToLayer: function (feature, latlng) {
+													//return L.circleMarker(latlng, geojsonMarkerOptions);
+													var mypopup = L.popup().setContent("latlng: " + latlng);
+													var mymarker = L.circleMarker(latlng, geojsonMarkerOptions);
+													//Attach the popup to the points (different from how you would traditionally do it). Thank you https://stackoverflow.com/questions/40475652/leaflet-add-popup-onto-a-layer-using-geojson
+													mymarker.bindPopup("<p><b>LUAS (Train Stops)</b></p> <p> <b>Stop Name:</b> "+feature.properties.LuasStop+"</p> <p> <b>Website:</b> "+feature.properties.LINK+"</p>");
+													return mymarker;
+												}
+
+											}).addTo(map2);
+
+											//make a locations variable, and fill it with locations from each point in your dataset
+											//plugin from https://github.com/Leaflet/Leaflet.heat
+											var locations = data.features.map(function(points) {
+										      // the heatmap plugin wants an array of each location
+										      var location = points.geometry.coordinates.reverse();
+										      location.push(1);
+										      return location;
+										  });
+
+											//make the heatmap layer
+											var heat = L.heatLayer(locations, { radius: 50 }, { altitude: 5 });
+
+										    //add the heatmap layer to the map
+										    map2.addLayer(heat);
+
+										});
+
+											//Thanks to https://www.igismap.com/add-load-geojson-file-point-polyline-polygon-map-leaflet-js/ for the tutorial
+											//data source https://data.smartdublin.ie/dataset/accessible-parking-spaces
+											$.getJSON("dublin/accessparking.geojson",function(data){
+
+											//Thanks to https://leafletjs.com/examples/geojson/ for info on point to layer
+											//Marker Style
+											var geojsonMarkerOptions = {
+												radius: 8,
+												fillColor: "#ffff00", //yellow
+												color: "#000",
+												weight: 1,
+												opacity: 1,
+												fillOpacity: 0.8,
+											};
+											//Do the point to layer thing
+											L.geoJSON(data, {
+												pointToLayer: function (feature, latlng) {
+													//return L.circleMarker(latlng, geojsonMarkerOptions);
+													var mypopup = L.popup().setContent("latlng: " + latlng);
+													var mymarker = L.circleMarker(latlng, geojsonMarkerOptions);
+													//Attach the popup to the points (different from how you would traditionally do it). Thank you https://stackoverflow.com/questions/40475652/leaflet-add-popup-onto-a-layer-using-geojson
+													mymarker.bindPopup("<p><b>Wheelchair Accessible Parking Spaces</b></p> <p> <b>Name:</b> "+feature.properties.location+"</p> <p> <b>Road:</b> "+feature.properties.roadname+"</p> <p> <b>Number of Spaces:</b> "+feature.properties.noofspaces+"</p>");
+													return mymarker;
+												}
+
+											}).addTo(map2);
+
+											//make a locations variable, and fill it with locations from each point in your dataset
+											//plugin from https://github.com/Leaflet/Leaflet.heat
+											var locations = data.features.map(function(points) {
+										      // the heatmap plugin wants an array of each location
+										      var location = points.geometry.coordinates.reverse();
+										      location.push(1);
+										      return location;
+										  });
+
+											//make the heatmap layer
+											var heat = L.heatLayer(locations, { radius: 40 });
+
+										    //add the heatmap layer to the map
+										    map2.addLayer(heat);
+
+
+											//Make a legend, add it to the bottom right
+									      	var legend2 = L.control({position: 'topright'});
+
+									      	//when adding the legend to the map...
+									      	legend2.onAdd = function (map) {
+									        //create a div for it
+									        //Thank you Matt Seto for the code
+									          var div2 = L.DomUtil.create('div2', 'info legend2');
+									          //set an image to the div content
+									          div2.innerHTML = "<img src=map2legend.jpg style='width: 200px;'></img>";
+									          //return the div
+									          return div2;
+									      };
+									      //add the legend to the map
+									      legend2.addTo(map2);
+
+										});
+
+
+									</script>
+
+									<br>
+
+									<h1>Other Routes</h1>
+									<p>Dublin has many other trains aside from the LUAS. There are several stops all throughout the city! These additional train routes greatly increase the accessibility of Dublin. </p>
+
+									<img src="images/luasmap.png" alt="map of the LUAS train routes" style="width:100%" />
+
+									<h1>How Accessible is Dublin?</h1>
+									<p>The people of Dublin certainly have great access to public transportation, with stops leading to all the major areas of the city. In addition, if they want to use a private vehicle, there are a few locations (mainly park and rides for the train) with several accessible spots to park!</p>
+
+
+								</article>
+							</div>
+						</div>
+					</div>
+
+
+					<!-- Footer -->
+					<div id="footer-wrapper">
+						<footer id="footer" class="container">
+							<div class="row">
+							</div>
+							<div class="row">
+								<div class="col-12">
+									<div id="copyright">
+										<ul class="menu">
+											<li>&copy; Sarah Pyle. All rights reserved</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</footer>
+					</div>
+
+				</div>
+
+
+				<!-- Scripts -->
+
+				<script src="assets/js/jquery.min.js"></script>
+				<script src="assets/js/jquery.dropotron.min.js"></script>
+				<script src="assets/js/browser.min.js"></script>
+				<script src="assets/js/breakpoints.min.js"></script>
+				<script src="assets/js/util.js"></script>
+				<script src="assets/js/main.js"></script>
+
+			</body>
+			</html>

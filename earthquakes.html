@@ -1,0 +1,198 @@
+<!DOCTYPE HTML>
+<!--
+	Verti by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+<head>
+	<title>Earthquakes</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<link rel="stylesheet" href="assets/css/main.css" />
+
+	<!--MapBox Javascript and CSS from https://www.mapbox.com/mapbox-gl-js/api/-->
+	<script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.51.0/mapbox-gl.js'></script>
+	<link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.51.0/mapbox-gl.css' rel='stylesheet' />
+
+	<style type="text/css">
+	div id=map {padding: 2%}
+
+</style>
+</head>
+
+<body class="is-preload no-sidebar">
+	<div id="page-wrapper">
+
+		<!-- Header -->
+		<div id="header-wrapper">
+			<header id="header" class="container">
+
+
+				<!-- Logo -->
+				<div id="logo">
+					<h1><a href="index.html">Sarah Pyle</a></h1>
+					<!--<span>Portfolio</span> -->
+				</div>
+
+
+				<!-- Nav -->
+				<nav id="nav">
+					<ul>
+						<li><a href="index.html">Home</a></li>
+
+						<li><a href="resume.html">Resume</a></li>
+
+						<li>
+							<li class="current"><a>Maps</a>
+								<ul>
+									<li><a href="JLS.html">Japanese Language School Project</a></li>
+									<li><a href="seattlecenters.html">Seattle Community Emergency Hubs</a></li>
+									<li><a href="earthquakes/earthquakes.html">Earthquakes</a></li>
+									<li><a href="dublin.html">Accessibility in Dublin, Ireland</a></li>
+
+										</ul>
+									</ul>
+								</nav>
+
+							</header>
+						</div>
+
+						<!-- Main -->
+						<div id="main-wrapper">
+							<div class="container">
+								<div id="content">
+
+									<!-- Content -->
+									<article>
+
+										<h2>Geology</h2>
+										<h3>Today's Earthquakes</h3>
+										<p>Hundreds of earthquakes occur daily across the globe, many of which we don't feel. This map shows all earthquakes for the past day. Click on an earthquake to see its details!</p>
+										<!--Map 1-->
+										<!-- Div for the map-->
+										<div id="map" style="width: 1400px; height: 800px;" class="mapboxgl-map">
+
+											<div class="mapboxgl-canary" style="visibility: hidden;"></div>
+
+											<div class="mapboxgl-canvas-container mapboxgl-interactive mapboxgl-touch-drag-pan mapboxgl-touch-zoom-rotate"><canvas class="mapboxgl-canvas" tabindex="0" aria-label="Map" width="1200" height="1200" style="position: absolute; width: 1400px; height: 800px;"></canvas></div>
+
+											<div class="mapboxgl-control-container">
+												<div class="mapboxgl-ctrl-top-left"></div>
+												<div class="mapboxgl-ctrl-top-right"></div>
+												<div class="mapboxgl-ctrl-bottom-left">
+													<div class="mapboxgl-ctrl" style="display: block;">
+														<a class="mapboxgl-ctrl-logo" target="_blank" href="https://www.mapbox.com/" aria-label="Mapbox logo" rel="noopener"></a>
+													</div>
+												</div>
+
+												<div class="mapboxgl-ctrl-bottom-right">
+													<!--<div class="mapboxgl-ctrl mapboxgl-ctrl-attrib"><a href="https://www.mapbox.com/about/maps/" target="_blank">© Mapbox</a>
+														<a href="http://www.openstreetmap.org/about/" target="_blank">© OpenStreetMap</a>-->
+
+													</div>
+												</div>
+											</div>
+
+											<!--Button-->
+											<button onclick="resetExtent2()">Reset Map</button>
+
+											<!-- The script that controls the map-->
+											<script>
+								//my Mapbox token
+								mapboxgl.accessToken = 'pk.eyJ1Ijoic2FyYWhwOTgiLCJhIjoiY2p0ZzdoaXE2MDB1ZjQzcGZpMWY0eThpMCJ9.mjYzBhlOz8aG8-14z99Uyg';
+
+								//The map variable
+								var map = new mapboxgl.Map({
+									container: 'map',
+									style: 'mapbox://styles/sarahp98/cjoc6hwwu2wcl2sqlplv9bq5q',
+								});
+								//set the center & zoom of the map
+								map.setCenter([-160, 30]);
+								map.setZoom(1.5);
+
+								//on map load, do some stuff
+								map.on('load', function(){
+									//add a source layer for earthquakes
+									map.addSource('earthquakes', {
+										"type": "geojson",
+										"data": "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson"
+									});
+								    //add the earthquakes to the map
+								    map.addLayer({
+								    	"id":"equakes",
+								    	"type":"circle",
+								    	"source":"earthquakes"
+								    });
+
+									//add a handler for clicking/popups
+									//Thanks to: https://www.mapbox.com/mapbox-gl-js/example/popup-on-click/
+									map.on('click', 'equakes', function (e) {
+										var coordinates = e.features[0].geometry.coordinates.slice();
+										var description = e.features[0].properties.mag;
+
+								        // Ensure that if the map is zoomed out such that multiple
+								        // copies of the feature are visible, the popup appears
+								        // over the copy being pointed to.
+								        while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+								        	coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+								        }
+								        //make the popup
+								        new mapboxgl.Popup()
+								        .setLngLat(coordinates)
+								        .setHTML(description="<p>Mag: "+e.features[0].properties.mag+"<br>location: "+e.features[0].properties.place+"<br>URL: <a href='"+e.features[0].properties.url+"'>Click here for details </a></p>")
+								        .addTo(map);
+
+								    });
+										// Add zoom and rotation controls to the map.
+										map.addControl(new mapboxgl.NavigationControl());
+									});
+										 //Button script
+										 function resetExtent2() {
+                      //get the map by it's variable ID, set the center to [ln, lat]
+                      map.setCenter([-160, 30]);
+                      //get the map by it's variable ID, set the zoom to (number)
+                      map.setZoom(1.5);
+                  }
+
+
+              </script>
+          </div>
+
+
+					</article>
+				</div>
+			</div>
+		</div>
+
+		<!-- Footer -->
+		<div id="footer-wrapper">
+			<footer id="footer" class="container">
+				<div class="row">
+				</div>
+				<div class="row">
+					<div class="col-12">
+						<div id="copyright">
+							<ul class="menu">
+								<li>&copy; Sarah Pyle. All rights reserved</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</footer>
+		</div>
+
+	</div>
+
+
+	<!-- Scripts -->
+
+	<script src="assets/js/jquery.min.js"></script>
+	<script src="assets/js/jquery.dropotron.min.js"></script>
+	<script src="assets/js/browser.min.js"></script>
+	<script src="assets/js/breakpoints.min.js"></script>
+	<script src="assets/js/util.js"></script>
+	<script src="assets/js/main.js"></script>
+
+</body>
+</html>

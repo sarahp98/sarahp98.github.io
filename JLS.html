@@ -1,0 +1,139 @@
+<!DOCTYPE HTML>
+<!--This template is from html5up: https://html5up.net/ I'm using the "Verti" template.
+-->
+<html>
+	<head>
+		<title>Japanese Language School Project</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+	</head>
+	<body class="is-preload no-sidebar">
+		<div id="page-wrapper">
+
+			<!-- Header -->
+				<div id="header-wrapper">
+					<header id="header" class="container">
+
+						<!-- Logo -->
+							<div id="logo">
+								<h1><a href="index.html">Sarah Pyle</a></h1>
+								<!--<span>by HTML5 UP</span> -->
+							</div>
+
+						<!-- Nav -->
+							<nav id="nav">
+								<ul>
+									<li><a href="index.html">Home</a></li>
+							
+									<li><a href="resume.html">Resume</a></li>
+
+									<li class="current">
+										<a>Maps</a>
+										<ul>
+											<li><a href="JLS.html">Japanese Language School Project</a></li>
+											<li><a href="seattlecenters.html">Seattle Community Emergency Hubs</a></li>
+											<li><a href="earthquakes.html">Earthquakes</a></li>
+											<li><a href="dublin.html">Accessibility in Dublin, Ireland</a></li>
+												
+									</li>
+									
+								</ul>
+							</nav>
+
+					</header>
+				</div>
+
+			<!-- Main -->
+				<div id="main-wrapper">
+					<div class="container">
+						<div id="content">
+
+							<!-- Content -->
+								<article>
+									<!--Text--> 
+									<h2>Japanese Language School Project</h2>
+
+									<p>I work in support of two professors as they write a book about their longterm research topic, Tacoma's Japanese Language School, and its community. The JLS was the central hub for Japanese families of all faiths in Tacoma. It served as a source of community pride, interaction, and generosity. The map below shows where the JLS stood before it was torn down in 1994. You can learn more about the project <a href = "http://www.tacoma.uw.edu/node/22287">here </a>. </p>
+
+									<!--Google Maps, base code taken from https://developers.google.com/maps/documentation/javascript/tutorial. Thanks, Google-->
+									<!--Note: gestureHanding below was found on Stack Overflow at https://stackoverflow.com/questions/45729047/disable-the-ctrl-scroll-to-zoom-google-maps
+										The code that I was working with minus gestureHandling worked fine on a blank page, but when I put it into my template, something was stopping the map controls from showing up as they were on a blank webpage. I think it might have to do with the bootstrap stuff this template uses. This stackoverflow code is my work around. It disables a new Google Maps default setting that requires you to cotrol+scroll to interact with the map. I wanted to ensure that my map controls showed up.-->
+										   
+									    <style>
+									      #map {
+									        height: 600px;  
+									        width: 100%; 
+									      }
+									    </style>
+
+									    <div id="map"></div>
+									    <script>
+									      function initMap() {
+									        var map = new google.maps.Map(document.getElementById('map'), {
+									          zoom: 18,
+									          center: {lat: 47.245607, lng:-122.442407},
+									          zoomControl: true,
+									          scaleControl: true,
+									          streetViewControl: true,
+											  mapTypeControl: false,
+											  fullscreencontrol: true,
+											  mapTypeId: google.maps.MapTypeId.HYBRID
+											      });
+														
+									         var marker = new google.maps.Marker({position: {lat: 47.245607, lng:-122.442407}, map: map});
+									      }
+									    </script>
+									    <script async defer
+									    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCZj1No_QU4N2hG-EgvGsDCCw2O8EMlQtY&callback=initMap">
+									    </script>
+										
+									
+
+									<!--Text--> 
+									<p> Dr. Hoffman and Dr. Hanneman have interviewed approximately 40 students from the Japanese Language School (which ran for several years until WWII). The interviewees made specific claims to the spaces that they interacted with. I turned the interview conversations into spatial data by way of coding information, georeferencing, and digitizing the places commonly mentioned in the interviews. I used ESRI's ArcMap 10.5.  </p>
+
+									
+									<!--Text--> 
+									<h3>The Tideflats</h3>
+									<p>I helped discover a new area of Tacoma occupied by the community that had been previously unknown in the body of work about the Japanese in Tacoma. During approximately 1900-1940 when the community was most active, various lumber mills were finding success in the tideflats (now called the Port of Tacoma). The lumber mills (mainly St. Paul) hired Japanese employees to perform various tasks. The nature of the work has been described as brutal. In the summer of 2018, Dr. Hoffman, Dr. Hanneman and I wrote an <a href = "https://digitalcommons.tacoma.uw.edu/conflux/10/">article</a> focusing on remapping the tideflats in accordance with our findings that the community lived and worked there.  </p>
+
+
+								</article>
+
+							
+						</div>
+					</div>
+				</div>
+
+				<!-- Footer -->
+		<div id="footer-wrapper">
+			<footer id="footer" class="container">
+				<div class="row">
+				</div>
+				<div class="row">
+					<div class="col-12">
+						<div id="copyright">
+							<ul class="menu">
+								<li>&copy; Sarah Pyle. All rights reserved</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</footer>
+		</div>
+
+	</div>
+
+
+		<!-- Scripts -->
+
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.dropotron.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>
