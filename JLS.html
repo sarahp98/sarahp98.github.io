@@ -25,19 +25,10 @@
 							<nav id="nav">
 								<ul>
 									<li><a href="index.html">Home</a></li>
-							
 									<li><a href="resume.html">Resume</a></li>
-
-									<li class="current">
-										<a>Maps</a>
-										<ul>
-											<li><a href="JLS.html">Japanese Language School Project</a></li>
-											<li><a href="seattlecenters.html">Seattle Community Emergency Hubs</a></li>
-											<li><a href="earthquakes.html">Earthquakes</a></li>
-											<li><a href="dublin.html">Accessibility in Dublin, Ireland</a></li>
-												
+									<li class="current"><a href="jls.html">Japantown Project</a></li>
 									</li>
-									
+
 								</ul>
 							</nav>
 
@@ -51,19 +42,20 @@
 
 							<!-- Content -->
 								<article>
-									<!--Text--> 
+									<!--Text-->
 									<h2>Japanese Language School Project</h2>
-
+									<h3>About the Project</h3>
 									<p>I work in support of two professors as they write a book about their longterm research topic, Tacoma's Japanese Language School, and its community. The JLS was the central hub for Japanese families of all faiths in Tacoma. It served as a source of community pride, interaction, and generosity. The map below shows where the JLS stood before it was torn down in 1994. You can learn more about the project <a href = "http://www.tacoma.uw.edu/node/22287">here </a>. </p>
-
+									<p> Dr. Hoffman and Dr. Hanneman have interviewed approximately 40 students from the Japanese Language School (which ran for several years until WWII). The interviewees made specific claims to the spaces that they interacted with. I turned the interview conversations into spatial data by way of coding information, georeferencing, and digitizing the places commonly mentioned in the interviews. I used ESRI's ArcMap 10.5.  </p>
+									<a class="image featured"><img src="images/japantown.jpg" /></a>
 									<!--Google Maps, base code taken from https://developers.google.com/maps/documentation/javascript/tutorial. Thanks, Google-->
 									<!--Note: gestureHanding below was found on Stack Overflow at https://stackoverflow.com/questions/45729047/disable-the-ctrl-scroll-to-zoom-google-maps
 										The code that I was working with minus gestureHandling worked fine on a blank page, but when I put it into my template, something was stopping the map controls from showing up as they were on a blank webpage. I think it might have to do with the bootstrap stuff this template uses. This stackoverflow code is my work around. It disables a new Google Maps default setting that requires you to cotrol+scroll to interact with the map. I wanted to ensure that my map controls showed up.-->
-										   
+
 									    <style>
 									      #map {
-									        height: 600px;  
-									        width: 100%; 
+									        height: 600px;
+									        width: 100%;
 									      }
 									    </style>
 
@@ -80,28 +72,25 @@
 											  fullscreencontrol: true,
 											  mapTypeId: google.maps.MapTypeId.HYBRID
 											      });
-														
+
 									         var marker = new google.maps.Marker({position: {lat: 47.245607, lng:-122.442407}, map: map});
 									      }
 									    </script>
 									    <script async defer
 									    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCZj1No_QU4N2hG-EgvGsDCCw2O8EMlQtY&callback=initMap">
 									    </script>
-										
-									
 
-									<!--Text--> 
-									<p> Dr. Hoffman and Dr. Hanneman have interviewed approximately 40 students from the Japanese Language School (which ran for several years until WWII). The interviewees made specific claims to the spaces that they interacted with. I turned the interview conversations into spatial data by way of coding information, georeferencing, and digitizing the places commonly mentioned in the interviews. I used ESRI's ArcMap 10.5.  </p>
-
-									
-									<!--Text--> 
+									<!--Text-->
 									<h3>The Tideflats</h3>
 									<p>I helped discover a new area of Tacoma occupied by the community that had been previously unknown in the body of work about the Japanese in Tacoma. During approximately 1900-1940 when the community was most active, various lumber mills were finding success in the tideflats (now called the Port of Tacoma). The lumber mills (mainly St. Paul) hired Japanese employees to perform various tasks. The nature of the work has been described as brutal. In the summer of 2018, Dr. Hoffman, Dr. Hanneman and I wrote an <a href = "https://digitalcommons.tacoma.uw.edu/conflux/10/">article</a> focusing on remapping the tideflats in accordance with our findings that the community lived and worked there.  </p>
 
+									<a class="image featured"><img src="images/tideflats.jpg" /></a>
 
+									<h3>Graduate Work</h3>
+									<p>Right now I am using Mapbox and Leaflet to map my final project in the MSGT program. I have collected addresses from several sources and am in the process of mapping them. My work will be published in an upcoming book. I will update this page when my project is complete.</p>
 								</article>
 
-							
+
 						</div>
 					</div>
 				</div>
